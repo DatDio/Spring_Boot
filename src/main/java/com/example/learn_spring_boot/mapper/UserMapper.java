@@ -11,12 +11,21 @@ import org.mapstruct.factory.Mappers;
 public interface UserMapper {
 
     // Map từ Users sang UserDto
+    @Mapping(source = "userName", target = "userName")
+    @Mapping(source = "passWord", target = "passWord")
+    @Mapping(source = "email", target = "email")
+    @Mapping(source = "phoneNumber", target = "phoneNumber")
     UserDto toDto(Users user);
 
     // Map từ CreateUserRequest sang Users
+    @Mapping(source = "userName", target = "userName")
+    @Mapping(source = "passWord", target = "passWord")
+    @Mapping(source = "email", target = "email")
+    @Mapping(source = "phoneNumber", target = "phoneNumber")
     Users toEntity(CreateUserRequest request);
 
     // Map từ UpdateUserRequest sang Users (Cập nhật từng trường, bỏ qua giá trị null)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateUserFromDto(UpdateUserRequest request, @MappingTarget Users user);
 }
+

@@ -6,6 +6,7 @@ import com.example.learn_spring_boot.dtos.requests.users.UpdateUserRequest;
 import com.example.learn_spring_boot.dtos.requests.users.UserDto;
 import com.example.learn_spring_boot.entities.Users;
 import com.example.learn_spring_boot.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,7 @@ public class UserController {
 
     // Tạo User mới
     @PostMapping("/create")
-    public ApiResponse<UserDto> createUser(@RequestBody CreateUserRequest request) {
+    public ApiResponse<UserDto> createUser(@Valid @RequestBody CreateUserRequest request) {
         return userService.createUser(request);
     }
 
