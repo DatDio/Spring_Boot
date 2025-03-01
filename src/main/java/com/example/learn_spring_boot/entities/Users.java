@@ -1,5 +1,6 @@
 package com.example.learn_spring_boot.entities;
 
+import com.example.learn_spring_boot.entities.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,10 +13,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Users {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Tự động tăng ID
-    private Long id;
+public class Users extends BaseEntity {
+
     @Column(nullable = false, unique = true)
     private String userName;
 

@@ -1,6 +1,8 @@
 package com.example.learn_spring_boot.controllers;
 
+import com.example.learn_spring_boot.SystemContants.PaginationConstant;
 import com.example.learn_spring_boot.Utils.ApiResponse;
+import com.example.learn_spring_boot.Utils.PageableObject;
 import com.example.learn_spring_boot.dtos.requests.users.CreateUserRequest;
 import com.example.learn_spring_boot.dtos.requests.users.UpdateUserRequest;
 import com.example.learn_spring_boot.dtos.requests.users.UserDto;
@@ -8,8 +10,11 @@ import com.example.learn_spring_boot.entities.Users;
 import com.example.learn_spring_boot.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -54,4 +59,20 @@ public class UserController {
         return userService.deleteUser(id);
     }
 
+    //Tìm kiêm
+    @PostMapping("/search")
+    public ApiResponse<PageableObject<UserDto>> searchUsers(
+            @RequestParam(required = false) String userName,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String phoneNumber,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdFrom,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdTo,
+
+            @RequestParam(defaultValue = PaginationConstant.DEFAULT_PAGE_STRING) int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction) {
+
+        return userService.searchUsers(userName, email, phoneNumber, createdFrom, createdTo, page, size, sortBy, direction);
+    }
 }

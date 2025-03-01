@@ -1,15 +1,23 @@
 package com.example.learn_spring_boot.services;
 
 import com.example.learn_spring_boot.Utils.ApiResponse;
+import com.example.learn_spring_boot.Utils.PageableObject;
 import com.example.learn_spring_boot.dtos.requests.users.CreateUserRequest;
 import com.example.learn_spring_boot.dtos.requests.users.UpdateUserRequest;
 import com.example.learn_spring_boot.dtos.requests.users.UserDto;
 import com.example.learn_spring_boot.entities.Users;
 import com.example.learn_spring_boot.mapper.UserMapper;
 import com.example.learn_spring_boot.repositories.UserRepository;
+import com.example.learn_spring_boot.specification.UserSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -65,7 +73,20 @@ public class UserService {
     }
 
 
+    public ApiResponse<PageableObject<UserDto>> searchUsers(
+            String userName, String email, String phoneNumber,
+            LocalDate createdFrom, LocalDate createdTo,
+            int page, int size, String sortBy, String direction) {
 
+        Specification<Users> spec = UserSpecification.filterUsers(userName, email, phoneNumber, createdFrom, createdTo);
+        Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Users> userPage = userRepository.findAll(spec, pageable);
+        Page<UserDto> userDtoPage = userPage.map(userMapper::toDto);
+        PageableObject<UserDto> response = new PageableObject<>(userDtoPage);
+        return ApiResponse.success("Fetched users successfully!", response);
+    }
 
 
 
