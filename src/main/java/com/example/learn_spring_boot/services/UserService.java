@@ -3,6 +3,7 @@ package com.example.learn_spring_boot.services;
 import com.example.learn_spring_boot.Utils.ApiResponse;
 import com.example.learn_spring_boot.Utils.PageableObject;
 import com.example.learn_spring_boot.dtos.requests.users.CreateUserRequest;
+import com.example.learn_spring_boot.dtos.requests.users.SearchUserRequest;
 import com.example.learn_spring_boot.dtos.requests.users.UpdateUserRequest;
 import com.example.learn_spring_boot.dtos.requests.users.UserDto;
 import com.example.learn_spring_boot.entities.Users;
@@ -16,7 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
+import org.springframework.util.StringUtils;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -33,19 +34,20 @@ public class UserService {
     }
 
     // Lấy tất cả users, trả về danh sách UserDto
-    public ApiResponse<List<UserDto>> getAllUsers() {
-        List<UserDto> users = userRepository.findAll()
-                .stream()
-                .map(userMapper::toDto)
-                .collect(Collectors.toList());
-        return ApiResponse.success("Fetched users successfully!", users);
-    }
+//    public ApiResponse<List<UserDto>> getAllUsers() {
+//        List<UserDto> users = userRepository.findAll()
+//                .stream()
+//                .map(userMapper::toDto)
+//                .collect(Collectors.toList());
+//        return ApiResponse.success("Fetched users successfully!", users);
+//    }
+
     // Lấy User theo ID
-    public ApiResponse<UserDto> getUserById(Long id) {
-        return userRepository.findById(id)
-                .map(user -> ApiResponse.success("User found!", userMapper.toDto(user)))
-                .orElseGet(() -> ApiResponse.failure("User not found!"));
-    }
+//    public ApiResponse<UserDto> getUserById(Long id) {
+//        return userRepository.findById(id)
+//                .map(user -> ApiResponse.success("User found!", userMapper.toDto(user)))
+//                .orElseGet(() -> ApiResponse.failure("User not found!"));
+//    }
 
     // Tạo User mới
     public ApiResponse<UserDto> createUser(CreateUserRequest request) {
@@ -73,20 +75,33 @@ public class UserService {
     }
 
 
-    public ApiResponse<PageableObject<UserDto>> searchUsers(
-            String userName, String email, String phoneNumber,
-            LocalDate createdFrom, LocalDate createdTo,
-            int page, int size, String sortBy, String direction) {
+    public ApiResponse<PageableObject<UserDto>> searchUsers(SearchUserRequest request) {
 
-        Specification<Users> spec = UserSpecification.filterUsers(userName, email, phoneNumber, createdFrom, createdTo);
-        Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
-        Pageable pageable = PageRequest.of(page, size, sort);
+        try{
+            Specification<Users> spec = UserSpecification.filterUsers(request);
+            // Đảm bảo giá trị mặc định nếu người dùng truyền `null` hoặc chuỗi rỗng
+            String sortBy = StringUtils.hasText(request.getSortBy()) ? request.getSortBy() : "createdAt";
+            String direction = StringUtils.hasText(request.getDirection()) ? request.getDirection() : "asc";
 
-        Page<Users> userPage = userRepository.findAll(spec, pageable);
-        Page<UserDto> userDtoPage = userPage.map(userMapper::toDto);
-        PageableObject<UserDto> response = new PageableObject<>(userDtoPage);
-        return ApiResponse.success("Fetched users successfully!", response);
+            Sort sort = direction.equalsIgnoreCase("desc")
+                    ? Sort.by(sortBy).descending()
+                    : Sort.by(sortBy).ascending();
+
+            Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
+
+            Page<Users> userPage = userRepository.findAll(spec, pageable);
+            Page<UserDto> userDtoPage = userPage.map(userMapper::toDto);
+
+            PageableObject<UserDto> response = new PageableObject<>(userDtoPage);
+            return ApiResponse.success("Fetched users successfully!", response);
+        }
+        catch (Exception e){
+
+        }
+        return ApiResponse.failure("Fetched users failure!");
     }
+
+
 
 
 

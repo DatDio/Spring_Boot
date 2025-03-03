@@ -4,6 +4,7 @@ import com.example.learn_spring_boot.SystemContants.PaginationConstant;
 import com.example.learn_spring_boot.Utils.ApiResponse;
 import com.example.learn_spring_boot.Utils.PageableObject;
 import com.example.learn_spring_boot.dtos.requests.users.CreateUserRequest;
+import com.example.learn_spring_boot.dtos.requests.users.SearchUserRequest;
 import com.example.learn_spring_boot.dtos.requests.users.UpdateUserRequest;
 import com.example.learn_spring_boot.dtos.requests.users.UserDto;
 import com.example.learn_spring_boot.entities.Users;
@@ -30,16 +31,16 @@ public class UserController {
 
 
     // Lấy danh sách tất cả User
-    @PostMapping("/getAll")
-    public ApiResponse<List<UserDto>> getAllUsers() {
-        return userService.getAllUsers();
-    }
+//    @PostMapping("/getAll")
+//    public ApiResponse<List<UserDto>> getAllUsers() {
+//        return userService.getAllUsers();
+//    }
 
     // Lấy thông tin User theo ID
-    @PostMapping("/getById")
-    public ApiResponse<UserDto> getUserById(@RequestParam Long id) {
-        return userService.getUserById(id);
-    }
+//    @PostMapping("/getById")
+//    public ApiResponse<UserDto> getUserById(@RequestParam Long id) {
+//        return userService.getUserById(id);
+//    }
 
     // Tạo User mới
     @PostMapping("/create")
@@ -61,18 +62,8 @@ public class UserController {
 
     //Tìm kiêm
     @PostMapping("/search")
-    public ApiResponse<PageableObject<UserDto>> searchUsers(
-            @RequestParam(required = false) String userName,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String phoneNumber,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdFrom,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdTo,
+    public ApiResponse<PageableObject<UserDto>> searchUsers(@RequestBody SearchUserRequest request) {
 
-            @RequestParam(defaultValue = PaginationConstant.DEFAULT_PAGE_STRING) int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "asc") String direction) {
-
-        return userService.searchUsers(userName, email, phoneNumber, createdFrom, createdTo, page, size, sortBy, direction);
+        return userService.searchUsers(request);
     }
 }
