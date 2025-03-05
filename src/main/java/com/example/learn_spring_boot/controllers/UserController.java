@@ -1,22 +1,15 @@
 package com.example.learn_spring_boot.controllers;
 
-import com.example.learn_spring_boot.SystemContants.PaginationConstant;
 import com.example.learn_spring_boot.Utils.ApiResponse;
 import com.example.learn_spring_boot.Utils.PageableObject;
 import com.example.learn_spring_boot.dtos.requests.users.CreateUserRequest;
 import com.example.learn_spring_boot.dtos.requests.users.SearchUserRequest;
 import com.example.learn_spring_boot.dtos.requests.users.UpdateUserRequest;
 import com.example.learn_spring_boot.dtos.requests.users.UserDto;
-import com.example.learn_spring_boot.entities.Users;
-import com.example.learn_spring_boot.services.UserService;
+import com.example.learn_spring_boot.services.users.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")

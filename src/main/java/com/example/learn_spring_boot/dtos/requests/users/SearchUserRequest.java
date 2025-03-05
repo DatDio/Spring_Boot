@@ -19,7 +19,7 @@ public class SearchUserRequest {
     private  String phoneNumber;
     private LocalDate createdFrom;
     private LocalDate createdTo;
-    private String sortBy = "createdAt";
+    private String sortBy = "createAt";
     private String direction="asc";
     private  int page = PaginationConstant.DEFAULT_PAGE;
     private  int size = PaginationConstant.DEFAULT_SIZE;

@@ -26,12 +26,12 @@ public class UserSpecification {
             if (StringUtils.hasText(request.getPhoneNumber())) {
                 predicates.add(criteriaBuilder.like(root.get("phoneNumber"), "%" + request.getPhoneNumber() + "%"));
             }
-//            if (request.getCreatedFrom() != null) {
-//                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("created_At"), request.getCreatedFrom()));
-//            }
-//            if (request.getCreatedTo() != null) {
-//                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("created_At"), request.getCreatedTo()));
-//            }
+            if (request.getCreatedFrom() != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createAt"), request.getCreatedFrom()));
+            }
+            if (request.getCreatedTo() != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("createAt"), request.getCreatedTo()));
+            }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };

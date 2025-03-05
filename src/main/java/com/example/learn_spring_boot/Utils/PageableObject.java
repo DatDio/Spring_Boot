@@ -17,7 +17,7 @@ public class PageableObject<T> {
     public PageableObject(Page<T> page) {
         this.data = page.getContent();
         this.totalPages = page.getTotalPages();
-        this.currentPage = page.getNumber();
+        this.currentPage = page.getNumber() + 1;
         this.hasNextPage = page.hasNext(); // Sử dụng hasNext() thay vì page.gethasNextPage()
     }
 }

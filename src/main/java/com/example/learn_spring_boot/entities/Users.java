@@ -1,11 +1,14 @@
 package com.example.learn_spring_boot.entities;
 
 import com.example.learn_spring_boot.entities.base.BaseEntity;
+import com.example.learn_spring_boot.enums.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "ApplicationUsers")
@@ -25,6 +28,13 @@ public class Users extends BaseEntity {
     private String email;
 
     private String phoneNumber;
+
+    @Column(nullable = true)
+    private LocalDate dateOfBirth;
+
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING) // Lưu dưới dạng chuỗi (MALE, FEMALE, OTHER)
+    private Gender gender = Gender.MALE;
 
     private String refreshToken;
 }
