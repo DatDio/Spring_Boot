@@ -1,7 +1,6 @@
-package com.example.learn_spring_boot.dtos.requests.users;
+package com.example.learn_spring_boot.dtos.requests.product;
 
 import com.example.learn_spring_boot.SystemContants.PaginationConstant;
-import com.example.learn_spring_boot.enums.Gender;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,23 +8,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class SearchUserRequest {
+@NoArgsConstructor
+public class SearchProductRequest {
     private Long id;
-    private  String userName;
-    private  String email;
-    private  String phoneNumber;
-    private  String gender ;
+    private long price;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    private LocalDate dateOfBirthFrom;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    private LocalDate dateOfBirthTo;
+    private String name;
+    private String description;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate createdFrom;

@@ -36,5 +36,8 @@ public class Users extends BaseEntity {
     @Enumerated(EnumType.STRING) // Lưu dưới dạng chuỗi (MALE, FEMALE, OTHER)
     private Gender gender = Gender.MALE;
 
+//    @Column(nullable = false)
+//    private Boolean isAdult = false;
+
     private String refreshToken;
 }

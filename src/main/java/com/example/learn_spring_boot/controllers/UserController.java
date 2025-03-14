@@ -53,10 +53,21 @@ public class UserController {
         return userService.deleteUser(id);
     }
 
-    //Tìm kiêm
+
     @PostMapping("/search")
     public ApiResponse<PageableObject<UserDto>> searchUsers(@RequestBody SearchUserRequest request) {
 
         return userService.searchUsers(request);
+    }
+
+    @PostMapping("/searchNativeQuery")
+    public ApiResponse<PageableObject<UserDto>> searchNativeQuery(@RequestBody SearchUserRequest request) {
+
+        return userService.searchUsersNativeQuery(request);
+    }
+    @PostMapping("/searchProcedure")
+    public ApiResponse<PageableObject<UserDto>> searchProcedure(@RequestBody SearchUserRequest request) {
+
+        return userService.searchUsersProcedure(request);
     }
 }

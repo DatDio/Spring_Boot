@@ -4,28 +4,67 @@ import com.example.learn_spring_boot.dtos.requests.users.CreateUserRequest;
 import com.example.learn_spring_boot.dtos.requests.users.UpdateUserRequest;
 import com.example.learn_spring_boot.dtos.requests.users.UserDto;
 import com.example.learn_spring_boot.entities.Users;
+import com.example.learn_spring_boot.enums.Gender;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
-@Mapper(componentModel = "spring")
-public interface UserMapper {
+@Component
+public class UserMapper {
 
-    // Map từ Users sang UserDto
-    @Mapping(source = "userName", target = "userName")
-    @Mapping(source = "passWord", target = "passWord")
-    @Mapping(source = "email", target = "email")
-    @Mapping(source = "phoneNumber", target = "phoneNumber")
-    UserDto toDto(Users user);
+    public UserDto toDto(Users user) {
+        if (user == null) {
+            return null;
+        }
+        UserDto dto = new UserDto();
+        dto.setId(user.getId());
+        dto.setUserName(user.getUserName());
+        dto.setPassWord(user.getPassWord());
+        dto.setEmail(user.getEmail());
+        dto.setPhoneNumber(user.getPhoneNumber());
+        dto.setDateOfBirth(user.getDateOfBirth());
+        dto.setGender(user.getGender() != null ? user.getGender().name() : null);
+        return dto;
+    }
 
-    // Map từ CreateUserRequest sang Users
-    @Mapping(source = "userName", target = "userName")
-    @Mapping(source = "passWord", target = "passWord")
-    @Mapping(source = "email", target = "email")
-    @Mapping(source = "phoneNumber", target = "phoneNumber")
-    Users toEntity(CreateUserRequest request);
+    public Users toEntity(CreateUserRequest request) {
+        if (request == null) {
+            return null;
+        }
+        Users user = new Users();
+        user.setUserName(request.getUserName());
+        user.setPassWord(request.getPassWord());
+        user.setEmail(request.getEmail());
+        user.setPhoneNumber(request.getPhoneNumber());
+        user.setDateOfBirth(request.getDateOfBirth());
+        user.setGender(Gender.valueOf(request.getGender())); // Convert String -> Enum
+        return user;
+    }
 
-    // Map từ UpdateUserRequest sang Users (Cập nhật từng trường, bỏ qua giá trị null)
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateUserFromDto(UpdateUserRequest request, @MappingTarget Users user);
+    public void updateUserFromDto(UpdateUserRequest request, Users user) {
+        if (request == null || user == null) {
+            return;
+        }
+        if (StringUtils.hasText(request.getUserName())) {
+            user.setUserName(request.getUserName());
+        }
+        if (StringUtils.hasText(request.getPassWord())) {
+            user.setPassWord(request.getPassWord());
+        }
+        if (StringUtils.hasText(request.getEmail())) {
+            user.setEmail(request.getEmail());
+        }
+        if (StringUtils.hasText(request.getPhoneNumber())) {
+            user.setPhoneNumber(request.getPhoneNumber());
+        }
+        if (request.getDateOfBirth() != null) {
+            user.setDateOfBirth(request.getDateOfBirth());
+        }
+        if (StringUtils.hasText(request.getGender())) {
+            user.setGender(Gender.valueOf(request.getGender())); // Convert String -> Enum
+        }
+    }
 }
+
 

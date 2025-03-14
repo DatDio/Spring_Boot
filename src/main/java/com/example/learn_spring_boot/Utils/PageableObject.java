@@ -14,10 +14,10 @@ public class PageableObject<T> {
     private long totalPages;
     private int currentPage;
 
-    public PageableObject(Page<T> page) {
-        this.data = page.getContent();
-        this.totalPages = page.getTotalPages();
-        this.currentPage = page.getNumber() + 1;
-        this.hasNextPage = page.hasNext(); // Sử dụng hasNext() thay vì page.gethasNextPage()
+    public PageableObject(List<T> data, boolean hasNextPage, long totalPages, int currentPage) {
+        this.data = data;
+        this.totalPages = totalPages;
+        this.currentPage = currentPage;
+        this.hasNextPage = hasNextPage;
     }
 }
