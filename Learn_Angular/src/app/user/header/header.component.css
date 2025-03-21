@@ -1,0 +1,32 @@
+.header .topbar .top-middle {
+    text-align: left !important; 
+}
+.search-container {
+    position: relative;
+    width: 300px;
+  }
+  
+  .search-dropdown {
+    z-index: 9999;
+    position: absolute;
+    top: 45px;
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid #ddd;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .search-dropdown li {
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .search-dropdown li:hover {
+    background: #f0f0f0;
+  }
+  

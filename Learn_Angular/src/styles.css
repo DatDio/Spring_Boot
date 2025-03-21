@@ -1,0 +1,58 @@
+body{
+    margin: 0;
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .breadcrumbs {
+        padding: 30px;
+    }
+}
+.align-items-center {
+    align-items: center !important;
+}
+.breadcrumbs .breadcrumbs-content {
+    position: relative;
+    text-align: left;
+}
+.breadcrumbs .breadcrumb-nav {
+    text-align: right;
+}
+
+/* Phân Trang */
+.pagination {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+  }
+  
+  .pagination button {
+    padding: 8px 12px;
+    border: 1px solid #007bff;
+    background-color: white;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+  
+  .pagination button:hover {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .pagination button.active {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    border-color: #0056b3;
+  }
+  
+  .pagination button:disabled {
+    background-color: #ccc;
+    color: #666;
+    border-color: #ccc;
+    cursor: not-allowed;
+  }
+  

@@ -1,0 +1,123 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { Product } from '@models/product.model';
+import { ProductService } from 'src/app/core/services/product/product.service';
+import { ActivatedRoute } from '@angular/router';
+@Component({
+  selector: 'app-product-list',
+  imports: [CommonModule, NgxPaginationModule],
+  templateUrl: './product-list.component.html',
+  styleUrl: './product-list.component.css'
+})
+export class ProductListComponent implements OnInit {
+  searchQuery: string = '';
+  
+  products: Product[] = [];
+  isLoading: boolean = true;
+  errorMessage: string = '';
+  totalItems: number = 0;
+  currentPage: number = 1;
+  pageSize: number = 6;
+  totalPages: number = 1;
+  pagesToShow: number[] = [];
+
+  searchParams = {
+    name: '',
+    priceFrom: null as number | null,
+    priceTo: null as number | null,
+    createdFrom: null as string | null,
+    createdTo: null as string | null,
+    sortBy: 'createAt',
+    direction: 'desc'
+  };
+
+  constructor(private productService: ProductService,private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+  // Lắng nghe thay đổi trên queryParams (nếu người dùng search)
+  this.route.queryParams.subscribe(params => {
+    this.searchQuery = params['search'] || '';
+    this.loadProducts();
+  });
+  }
+
+  /** Gọi API lấy danh sách sản phẩm */
+  loadProducts(): void {
+    this.isLoading = true;
+    
+    const params = {
+      ...this.searchParams,
+      page: this.currentPage,
+      size: this.pageSize
+    };
+
+    this.productService.searchProducts(params).subscribe({
+      next: (data) => {
+        this.products = data.data;
+        this.totalPages = data.totalPages;
+        this.totalItems = data.totalItems;
+        this.isLoading = false;
+        this.updatePagination();
+      },
+      error: () => {
+        this.errorMessage = 'Lỗi khi tải danh sách sản phẩm!';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  /** Cập nhật danh sách số trang hiển thị (tối đa 5 trang) */
+  updatePagination(): void {
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxPagesToShow / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1);
+
+    if (endPage - startPage < maxPagesToShow - 1) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+
+    this.pagesToShow = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+  }
+
+  /** Thay đổi trang */
+  onPageChange(page: number): void {
+    if (page !== this.currentPage && page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.loadProducts();
+    }
+  }
+
+  /** Thay đổi sắp xếp */
+  onSortChange(event: any): void {
+    const sortOptions: Record<string, { sortBy: string; direction: string }> = {
+      'price_desc': { sortBy: 'price', direction: 'desc' },
+      'price_asc': { sortBy: 'price', direction: 'asc' },
+      'newest': { sortBy: 'createAt', direction: 'desc' }
+    };
+
+    const selectedValue = event.target.value;
+    if (sortOptions[selectedValue]) {
+      this.searchParams.sortBy = sortOptions[selectedValue].sortBy;
+      this.searchParams.direction = sortOptions[selectedValue].direction;
+      this.onFilterChange();
+    }
+  }
+
+  /** Áp dụng bộ lọc */
+  onFilterChange(): void {
+    this.currentPage = 1;
+    this.loadProducts();
+  }
+
+  /** Áp dụng tìm kiếm theo khoảng giá */
+  applyPriceFilter(priceFrom: string, priceTo: string): void {
+    const fromValue = parseFloat(priceFrom);
+    const toValue = parseFloat(priceTo);
+
+    if (!isNaN(fromValue)) this.searchParams.priceFrom = fromValue;
+    if (!isNaN(toValue)) this.searchParams.priceTo = toValue;
+
+    this.onFilterChange();
+  }
+}

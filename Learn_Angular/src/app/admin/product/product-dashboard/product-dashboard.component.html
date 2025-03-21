@@ -1,0 +1,91 @@
+<div class="product-dashboard-tab">
+    <div class="container">
+      
+      <!-- Thanh tìm kiếm -->
+      <div class="search-section">
+        <input type="text" class="form-control mb-3" placeholder="Tìm kiếm sản phẩm..." (input)="onSearch($event)">
+      </div>
+  
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Sản Phẩm</h4>
+  
+          <div *ngIf="isLoading" class="alert alert-warning">Đang tải...</div>
+          <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+  
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Ảnh</th>
+                  <th>Tên sản phẩm</th>
+                  <th>Mô tả</th>
+                  <th>Giá</th>
+                  <th>Khác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Sử dụng ngx-pagination -->
+                <tr *ngFor="let product of products">
+                  <td>
+                    <img [src]="imageBaseUrl + product.imageUrl" alt="Ảnh sản phẩm" class="img-thumbnail" width="50">
+                  </td>
+                  <td>{{ product.name }}</td>
+                  <td>{{ product.description }}</td>
+                  <td>{{ product.price | currency:'VND' }}</td>
+                  <td>
+                    <div class="product-action">
+                      <a class="product-action-item" [routerLink]="['/admin', 'edit-product', product.id]">Xem Chi Tiết</a>
+                      <a class="product-action-item " (click)="openDeleteModal(product.id)">Xóa</a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Hiển thị số trang -->
+      <div class="pagination-info">
+        Trang {{ currentPage }} / {{ totalPages }}
+      </div>
+  
+      <!-- Phân trang -->
+      <div class="pagination">
+        <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">Trước</button>
+    
+        <button *ngIf="pagesToShow[0] > 1" (click)="onPageChange(1)">1</button>
+        <span *ngIf="pagesToShow[0] > 2">...</span>
+    
+        <button *ngFor="let page of pagesToShow"
+                (click)="onPageChange(page)"
+                [class.active]="currentPage === page">
+            {{ page }}
+        </button>
+    
+        <span *ngIf="pagesToShow[pagesToShow.length - 1] < totalPages - 1">...</span>
+        <button *ngIf="pagesToShow[pagesToShow.length - 1] < totalPages" (click)="onPageChange(totalPages)">{{ totalPages }}</button>
+    
+        <button (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages">Sau</button>
+    </div>
+    </div>
+  </div>
+
+ <div class="modal fade " id="deleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Xác nhận xóa</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Bạn có chắc chắn muốn xóa sản phẩm này không?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-cancel-modal" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-danger" (click)="confirmDelete()">Xóa</button>
+      </div>
+    </div>
+  </div>
+</div>

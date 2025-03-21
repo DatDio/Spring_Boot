@@ -1,0 +1,57 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title">{{isEditing?'Chi Tiết Sản Phẩm':'Thêm Sản Phẩm'}}</h4>
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="image">Ảnh sản phẩm</label>
+        <input #fileInput type="file" class="form-control" (change)="onFileSelected($event)">
+
+        <!-- Hiển thị lỗi nếu file quá lớn -->
+        <small class="text-danger" *ngIf="fileError">{{ fileError }}</small>
+
+        <!-- Hiển thị lỗi nếu form chưa chọn ảnh -->
+        <small class="text-danger" *ngIf="f['image'].touched && f['image'].invalid">
+          Vui lòng thêm ảnh sản phẩm
+        </small>
+        <div *ngIf="imagePreview" class="mt-3">
+          <img [src]="imagePreview" alt="Ảnh xem trước" class="img-thumbnail" style="max-width: 200px;">
+        </div>
+      </div>
+
+
+      <!-- Hiển thị ảnh xem trước -->
+
+
+      <div class="form-group">
+        <label for="name">Tên sản phẩm</label>
+        <input type="text" formControlName="name" class="form-control" id="name" placeholder="Nhập tên sản phẩm">
+        <small class="text-danger" *ngIf="f['name'].touched && f['name'].invalid">
+          Tên sản phẩm không được để trống
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Mô tả sản phẩm</label>
+        <input type="text" formControlName="description" class="form-control" id="description" placeholder="Nhập mô tả">
+        <small class="text-danger" *ngIf="f['description'].touched && f['description'].invalid">
+          Mô tả không được để trống
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="price">Giá</label>
+        <input type="number" formControlName="price" class="form-control" id="price" placeholder="Nhập giá">
+        <small class="text-danger" *ngIf="f['price'].touched && f['price'].invalid">
+          Giá phải lớn hơn 0
+        </small>
+      </div>
+
+      <button type="submit" class="btn btn-primary me-2" [disabled]="productForm.invalid || isLoading">
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm">
+
+        </span> {{isEditing?'Lưu':'Thêm'}}
+      </button>
+      <button type="button" class="btn btn-light" (click)="resetForm()">Hủy</button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,120 @@
+.shopping-cart {
+    background-color: #f9f9f9;
+}
+.cart-list-head {
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #eee;
+}
+.cart-list-title {
+    background-color: #fff;
+    padding: 18px 20px;
+    border-bottom: 1px solid #eee;
+}
+.cart-single-list {
+    padding: 30px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+}
+.align-items-center {
+    align-items: center !important;
+}
+.cart-single-list {
+    padding: 30px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+}
+.cart-single-list:last-child {
+    border: none !important;
+    border-radius: 0 0 4px 4px;
+}
+.cart-single-list {
+    padding: 30px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+}
+.shopping-cart .total-amount .coupon {
+    padding: 40px;
+    border: 1px solid #eee;
+    background-color: #fff;
+    border-radius: 4px;
+    margin-top: 40px;
+    display: inline-block;
+}
+.shopping-cart .total-amount .coupon input {
+    width: 300px;
+    height: 46px;
+    border: 1px solid #dddddd;
+    overflow: hidden;
+    border-radius: 4px;
+    color: #333;
+    padding: 0px 20px;
+    display: inline-block;
+}
+button, input, optgroup, select, textarea {
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.shopping-cart .total-amount .coupon .button {
+    display: inline-block;
+}
+.shopping-cart .total-amount .coupon button {
+    border: none;
+    height: 46px;
+    display: inline-block;
+    margin-left: 8px;
+    position: relative;
+    top: -2px;
+}
+.button .btn:last-child {
+    margin: 0;
+}
+.shopping-cart .total-amount .right {
+    padding: 40px;
+    border: 1px solid #eee;
+    background-color: #fff;
+    border-radius: 4px;
+    margin-top: 40px;
+}
+.shopping-cart .total-amount .right ul li {
+    font-size: 14px;
+    font-weight: 500;
+    color: #081828;
+    margin-bottom: 12px;
+}
+.shopping-cart .total-amount .right .button {
+    margin-top: 30px;
+}
+.shopping-cart .total-amount .right .btn {
+    width: 100%;
+    margin-bottom: 8px;
+    text-align: center;
+    padding: 12px 20px;
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .button .btn {
+        padding: 12px 25px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+}
+.button .btn {
+    display: inline-block;
+    text-transform: capitalize;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 13px 30px;
+    background-color: #0167F3;
+    color: #fff;
+    border: none;
+    -webkit-transition: 0.2s;
+    transition: 0.2s;
+    border-radius: 3px;
+    position: relative;
+    z-index: 1;
+    margin-right: 7px;
+    overflow: hidden;
+}
