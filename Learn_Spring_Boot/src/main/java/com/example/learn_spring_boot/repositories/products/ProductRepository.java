@@ -13,13 +13,13 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Products,Long>,
         JpaSpecificationExecutor<Products> {
-    @EntityGraph(attributePaths = {"colors", "colors.variants"})
+    @EntityGraph(attributePaths = {"productColors", "productColors.variants"})
     Optional<Products> findById(Long id);
 
-    @Query("SELECT p FROM Products p " +
-            "LEFT JOIN FETCH p.colors c " +
-            "LEFT JOIN FETCH c.variants " +
-            "WHERE p.id = :id")
-    Optional<Products> findByIdWithDetails(@Param("id") Long id);
+//    @Query("SELECT p FROM Products p " +
+//            "LEFT JOIN FETCH p.colors c " +
+//            "LEFT JOIN FETCH c.variants " +
+//            "WHERE p.id = :id")
+//    Optional<Products> findByIdWithDetails(@Param("id") Long id);
 
 }

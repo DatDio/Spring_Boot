@@ -1,0 +1,285 @@
+<!-- add-product.component.html -->
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Thêm Sản Phẩm</h4>
+
+        <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+            <!-- Phần ảnh bìa sản phẩm -->
+            <div class="form-group mb-3">
+                <label for="image">Ảnh bìa sản phẩm</label>
+                <!-- Ẩn input file -->
+                <input #fileInput type="file" class="form-control d-none" (change)="onCoverFileSelected($event)">
+
+                <!-- Ô chọn ảnh -->
+                <div class="image-upload-box" (click)="fileInput.click()">
+                    <ng-container *ngIf="coverImagePreview; else uploadPlaceholder">
+                        <img [src]="imageBaseUrl+ coverImagePreview" alt="Ảnh xem trước" class="img-thumbnail">
+                    </ng-container>
+                    <!-- Nếu chưa có ảnh -->
+                    <ng-template #uploadPlaceholder>
+                        <div class="upload-placeholder">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Nhấn để tải ảnh lên</p>
+                        </div>
+                    </ng-template>
+                </div>
+
+                <!-- Hiển thị lỗi nếu file quá lớn -->
+                <small class="text-danger" *ngIf="fileError">{{ fileError }}</small>
+
+                <!-- Hiển thị lỗi nếu form chưa chọn ảnh -->
+                <small class="text-danger"
+                    *ngIf="productForm.get('image')?.touched && productForm.get('image')?.invalid">
+                    Vui lòng thêm ảnh sản phẩm
+                </small>
+
+            </div>
+
+            <!-- Tên sản phẩm -->
+            <div class="form-group mb-3">
+                <label for="name">Tên sản phẩm</label>
+                <input type="text" formControlName="name" class="form-control" id="name"
+                    placeholder="Nhập tên sản phẩm">
+                <small class="text-danger" *ngIf="productForm.get('name')?.touched && productForm.get('name')?.invalid">
+                    Tên sản phẩm không được để trống
+                </small>
+            </div>
+
+            <!-- Danh mục -->
+            <div class="form-group mb-3 d-flex justify-content-between">
+                <div class="catebrand-item">
+                    <label for="categoryId">Danh mục</label>
+                    <select formControlName="categoryId" class="form-control" id="categoryId">
+                        <option value="">-- Chọn danh mục --</option>
+                        <option *ngFor="let category of categoryList" [value]="category.id"
+                            [selected]="category.id === (productForm.get('categoryId')?.value ?? '')">
+                            {{ category.name }}
+                        </option>
+                    </select>
+                    <small class="text-danger"
+                        *ngIf="productForm.get('categoryId')?.touched && productForm.get('categoryId')?.invalid">
+                        Danh mục không được để trống
+                    </small>
+                </div>
+                <div class="catebrand-item">
+                    <label for="brandId">Thương Hiệu</label>
+                    <select formControlName="brandId" class="form-control" id="brandId">
+                        <option value="">--Chọn thương hiệu --</option>
+                        <option *ngFor="let brand of brandList" [value]="brand.id"
+                            [selected]="brand.id === (productForm.get('brandId')?.value ?? '')">
+                            {{ brand.name }}
+                        </option>
+                    </select>
+                    <small class="text-danger"
+                        *ngIf="productForm.get('brandId')?.touched && productForm.get('brandId')?.invalid">
+                        Thương hiệu không được để trống
+                    </small>
+                </div>
+            </div>
+
+            <!-- Mô tả sản phẩm -->
+            <div class="form-group mb-3">
+                <label for="description">Mô tả sản phẩm</label>
+                <textarea formControlName="description" class="form-control" id="description" rows="3"
+                    placeholder="Nhập mô tả"></textarea>
+                <small class="text-danger"
+                    *ngIf="productForm.get('description')?.touched && productForm.get('description')?.invalid">
+                    Mô tả không được để trống
+                </small>
+            </div>
+
+            <!-- Nút thêm màu -->
+            <div class="mb-3">
+                <button type="button" (click)="addProductColor()" class="btn btn-info">
+                    <i class="bi bi-plus-circle"></i> Thêm Màu Sắc
+                </button>
+            </div>
+            <!-- Danh sách màu sắc -->
+            <div formArrayName="productColors">
+                <div *ngFor="let colorGroup of productColors.controls; let i = index"
+                    class="card mb-3 color-card productcolor-parent">
+                    <div class="card-header d-flex justify-content-between">
+                        <div>
+                            <h2 class="mb-0">Màu sắc {{ i + 1 }}</h2>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-secondary" (click)="removeProductColor(i)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card-body" [formGroupName]="i">
+                        <div class="row">
+                            <!-- Ảnh màu -->
+                            <div class="col-2">
+                                <label>Ảnh màu:</label>
+
+                                <!-- Ẩn input file -->
+                                <input #fileInputs type="file" class="d-none"
+                                    (change)="onColorImageSelected($event, i)">
+
+                                <!-- Ô chọn ảnh -->
+                                <div class="image-upload-color-box" (click)="fileInputs.click()">
+                                    <ng-container *ngIf="getColorImagePreview(i); else uploadPlaceholder">
+                                        <img [src]="getColorImagePreview(i)" alt="Ảnh màu" class="img-thumbnail">
+                                    </ng-container>
+                                    <!-- Nếu chưa có ảnh -->
+                                    <ng-template #uploadPlaceholder>
+                                        <div class="upload-placeholder">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                            <p>Nhấn để tải ảnh lên</p>
+                                        </div>
+                                    </ng-template>
+                                </div>
+
+                                <!-- Hiển thị lỗi nếu file quá lớn -->
+                                <small class="text-danger" *ngIf="fileError">{{ fileError }}</small>
+
+                                <!-- Hiển thị lỗi nếu form chưa chọn ảnh -->
+                                <small class="text-danger"
+                                    *ngIf="productForm.get('images')?.touched && productForm.get('images')?.invalid">
+                                    Vui lòng thêm ảnh sản phẩm
+                                </small>
+                            </div>
+
+                            <!-- Tên màu -->
+                            <div class="col-4 d-flex flex-column ">
+                                <label>Tên màu:</label>
+                                <div class="product-color-item">
+
+                                    <input type="text" formControlName="color" class="form-control"
+                                        placeholder="Ví dụ: Đỏ, Xanh...">
+                                    <!-- Lỗi bắt buộc nhập -->
+                                    <small class="text-danger"
+                                        *ngIf="getColorGroup(i).get('color')?.touched && getColorGroup(i).get('color')?.hasError('required')">
+                                        Tên màu không được để trống
+                                    </small>
+
+                                    <!-- Lỗi trùng màu (chỉ hiển thị khi không bị lỗi required) -->
+                                    <small class="text-danger" *ngIf="getColorGroup(i).get('color')?.touched 
+    && !getColorGroup(i).get('color')?.hasError('required') 
+    && getColorGroup(i).get('color')?.hasError('duplicateColor')">
+                                        Màu này đã tồn tại, vui lòng chọn màu khác!
+                                    </small>
+
+
+                                </div>
+
+                                <div class="product-color-item">
+                                    <label>Giá:</label>
+                                    <input type="number" formControlName="price" class="form-control">
+                                    <small class="text-danger"
+                                        *ngIf="getColorGroup(i).get('price')?.touched && getColorGroup(i).get('price')?.hasError('required')">
+                                        Giá không được để trống
+                                    </small>
+                                    <small class="text-danger"
+                                        *ngIf="getColorGroup(i).get('price')?.touched && getColorGroup(i).get('price')?.hasError('min')">
+                                        Giá không hợp lệ
+                                    </small>
+                                </div>
+                            </div>
+
+                            <!-- Danh sách variants (kích cỡ) -->
+                            <div formArrayName="variants" class="col-6">
+                                <div *ngFor="let variantGroup of getVariants(i).controls; let j = index"
+                                    [formGroupName]="j" class="card  variant-card">
+                                    <div class="card-body card-body-variant">
+                                        <div class="row">
+                                            <!-- Kích cỡ -->
+                                            <div class="col-md-5">
+                                                <label>Kích cỡ:</label>
+                                                <div class="product-variant-item">
+                                                    <input type="text" formControlName="productSize"
+                                                        class="form-control" placeholder="Ví dụ: S, M, L, XL...">
+                                                    <!-- Lỗi bắt buộc nhập -->
+                                                    <small class="text-danger" *ngIf="getVariants(i).at(j).get('productSize')?.touched 
+            && getVariants(i).at(j).get('productSize')?.hasError('required')">
+                                                        Kích cỡ không được để trống
+                                                    </small>
+
+                                                    <!-- Lỗi trùng kích cỡ -->
+                                                    <small class="text-danger" *ngIf="getVariants(i).at(j).get('productSize')?.touched 
+            && !getVariants(i).at(j).get('productSize')?.hasError('required') 
+            && getVariants(i).at(j).get('productSize')?.hasError('duplicateSize')">
+                                                        Kích cỡ này đã tồn tại, vui lòng chọn kích cỡ khác!
+                                                    </small>
+                                                </div>
+                                            </div>
+
+                                            <!-- Số lượng -->
+                                            <div class="col-md-5">
+                                                <label>Số lượng:</label>
+                                                <div class="product-variant-item">
+                                                    <input type="number" formControlName="stockQuantity"
+                                                        class="form-control">
+                                                    <small class="text-danger"
+                                                        *ngIf="getVariants(i).at(j).get('stockQuantity')?.touched && getVariants(i).at(j).get('stockQuantity')?.hasError('required')">
+                                                        Số lượng không được để trống
+                                                    </small>
+                                                    <small class="text-danger"
+                                                        *ngIf="getVariants(i).at(j).get('stockQuantity')?.touched && getVariants(i).at(j).get('stockQuantity')?.hasError('min')">
+                                                        Số lượng phải lớn hơn 0
+                                                    </small>
+                                                </div>
+
+                                            </div>
+
+                                            <!-- Nút xóa kích cỡ -->
+                                            <div class="col-md-2 d-flex align-items-center">
+                                                <button type="button"
+                                                    class="btn btn-secondary btn-sm btn-remove-variant"
+                                                    (click)="removeVariant(i, j)">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nút thao tác với màu -->
+                        <div class="mb-3 mt-4">
+                            <button type="button" class="btn btn-info me-2" (click)="addVariant(i)">
+                                <i class="bi bi-plus-circle"></i> Thêm Kích Cỡ
+                            </button>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nút submit và reset -->
+            <div class="d-flex mt-4">
+                <button type="submit" class="btn btn-primary me-2" [disabled]="productForm.invalid || isLoading">
+                    <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-1"></span>
+                    Lưu Thay Đổi
+                </button>
+                <!-- Nút mở modal -->
+                <button type="button" class="btn btn-secondary" (click)="openCancelModal()">Hủy</button>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelModalLabel">Xác nhận hủy</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắn muốn hủy không?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Không</button>
+                <button type="button" class="btn btn-danger" (click)="confirmCancel()">Có, hủy</button>
+            </div>
+        </div>
+    </div>
+</div>

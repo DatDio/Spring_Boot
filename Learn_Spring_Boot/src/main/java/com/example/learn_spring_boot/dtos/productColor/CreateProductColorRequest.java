@@ -9,15 +9,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateProductColorRequest {
-    private Long productId;   // ID của sản phẩm liên kết
-    private BigDecimal price; // Giá của màu sản phẩm
-    private MultipartFile image;
+    //private Long productId;   // ID của sản phẩm liên kết
+    private double price; // Giá của màu sản phẩm
+    private String imageUrl;
     private String color;
-    private List<CreateProductVariantRequest> variants;
+    private Set<CreateProductVariantRequest> variants;
 }

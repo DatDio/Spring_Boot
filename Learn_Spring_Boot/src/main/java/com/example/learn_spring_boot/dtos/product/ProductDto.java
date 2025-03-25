@@ -14,12 +14,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductDto extends BaseDto {
-    private long price;
 
     private String name;
     private String description;
-
     private String imageUrl;
+    private Long brandId;
+    private Long categoryId;
 
     private List<ProductColorDto> productColors;
 }

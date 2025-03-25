@@ -6,18 +6,20 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
+@AllArgsConstructor
 public class ProductColorDto extends BaseDto {
-    private Long productId;      // ID của sản phẩm liên kết
-    private BigDecimal price;    // Giá của màu sản phẩm
-    private String color;        // Màu sắc
+    //private Long productId;      // ID của sản phẩm liên kết
+    private double price;
+    private String color;
     private String imageUrl;
     private List<ProductVariantDto> variants;
 }

@@ -5,7 +5,6 @@ import { NotFoundComponent } from './share/not-found/not-found.component';
 export const routes: Routes = [
   {
     path: '',
-    component: UserLayoutComponent,
     loadChildren: () => import('./layouts/user-layout/user-layout.routes').then(m => m.USER_LAYOUT_ROUTES)
   },
   {

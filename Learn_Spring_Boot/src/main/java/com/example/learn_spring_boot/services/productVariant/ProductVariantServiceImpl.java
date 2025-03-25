@@ -22,11 +22,11 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         this.productVariantMapper = productVariantMapper;
     }
 
-    @Override
-    public ApiResponse<ProductVariantDto> createProductVariant(CreateProductVariantRequest request, ProductColor productColor) {
-        ProductVariant productVariant = productVariantMapper.toEntity(request);
-        productVariant.setProductColor(productColor);
-        productVariant = productVariantRepository.save(productVariant);
-        return ApiResponse.success("Tạo biến thể sản phẩm thành công!", productVariantMapper.toDto(productVariant));
-    }
+//    @Override
+//    public ApiResponse<ProductVariantDto> createProductVariant(CreateProductVariantRequest request, ProductColor productColor) {
+//        ProductVariant productVariant = productVariantMapper.toEntity(request,productColor);
+//        productVariant.setProductColor(productColor);
+//        productVariant = productVariantRepository.save(productVariant);
+//        return ApiResponse.success("Tạo biến thể sản phẩm thành công!", productVariantMapper.toDto(productVariant));
+//    }
 }

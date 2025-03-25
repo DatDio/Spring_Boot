@@ -11,11 +11,9 @@ public interface AuthenticationService {
 
     ApiResponse<String> signUp(SignUpRequest signUpRequest);
 
-    ApiResponse<JwtAuhenticationResponse> singIn(SigninRequest request);
+    ApiResponse<JwtAuhenticationResponse> signIn(SigninRequest request);
 
-    ApiResponse<String> resetPassword(ResetPassword resetPassword);
 
-    ApiResponse<String> changePassword (ChangePassword changePassword);
 
 
 }

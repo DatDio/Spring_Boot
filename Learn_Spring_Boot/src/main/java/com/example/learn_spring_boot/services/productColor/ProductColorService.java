@@ -8,6 +8,6 @@ import com.example.learn_spring_boot.entities.Products;
 import java.util.List;
 
 public interface ProductColorService {
-    ApiResponse<ProductColorDto> createProductColor(CreateProductColorRequest request, Products product);
-    ApiResponse<List<ProductColorDto>> getByProductId(Long productId);
+//    ApiResponse<ProductColorDto> createProductColor(CreateProductColorRequest request, Products product);
+//    ApiResponse<List<ProductColorDto>> getByProductId(Long productId);
 }

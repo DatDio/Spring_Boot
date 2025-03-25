@@ -24,18 +24,19 @@ public class ProductColorServiceImpl implements ProductColorService {
         this.productColorMapper = productColorMapper;
     }
 
-    @Override
-    public ApiResponse<ProductColorDto> createProductColor(CreateProductColorRequest request, Products product) {
-        ProductColor productColor = productColorMapper.toEntity(request);
-        productColor.setProduct(product);
-        productColor = productColorRepository.save(productColor);
-        return ApiResponse.success("Tạo màu sản phẩm thành công!", productColorMapper.toDto(productColor));
-    }
 
-    @Override
-    public ApiResponse<List<ProductColorDto>> getByProductId(Long productId) {
-        List<ProductColor> colors = productColorRepository.findByProductId(productId);
-        List<ProductColorDto> colorDtos = colors.stream().map(productColorMapper::toDto).collect(Collectors.toList());
-        return ApiResponse.success("Lấy danh sách màu sản phẩm thành công!", colorDtos);
-    }
+//    @Override
+//    public ApiResponse<ProductColorDto> createProductColor(CreateProductColorRequest request, Products product) {
+////        ProductColor productColor = productColorMapper.toEntity(request,product);
+////        productColor.setProduct(product);
+////        productColor = productColorRepository.save(productColor);
+//        return ApiResponse.success("Tạo màu sản phẩm thành công!", productColorMapper.toDto(productColor));
+//    }
+//
+//    @Override
+//    public ApiResponse<List<ProductColorDto>> getByProductId(Long productId) {
+//        List<ProductColor> colors = productColorRepository.findByProductId(productId);
+//        List<ProductColorDto> colorDtos = colors.stream().map(productColorMapper::toDto).collect(Collectors.toList());
+//        return ApiResponse.success("Lấy danh sách màu sản phẩm thành công!", colorDtos);
+//    }
 }

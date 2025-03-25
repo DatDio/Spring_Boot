@@ -36,7 +36,7 @@ public class JwtService {
         //claims.put("avatar", user.getAvatar());
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(user.getEmail())
+                .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 60 * 1000))
                 .signWith(getSiginKey(), SignatureAlgorithm.HS256)
@@ -53,7 +53,7 @@ public class JwtService {
         //extractClaims.put("avatar", user.getAvatar());
         return Jwts.builder()
                 .setClaims(extractClaims)
-                .setSubject(user.getEmail())
+                .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 30 * 24 * 60 * 60 * 60 * 1000))
                 .signWith(getSiginKey(), SignatureAlgorithm.HS256)

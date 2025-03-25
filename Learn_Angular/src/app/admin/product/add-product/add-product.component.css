@@ -1,0 +1,63 @@
+.catebrand-item{
+    width: 40%;
+}
+.productcolor-parent{
+    border: 1px solid #e7dfdf;
+}
+.image-upload-box {
+    width: 200px;
+    height: 200px;
+    border: 2px dashed #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.image-upload-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.upload-placeholder {
+    text-align: center;
+    color: #aaa;
+}
+
+.upload-placeholder i {
+    font-size: 40px;
+    margin-bottom: 8px;
+}
+.image-upload-color-box{
+    margin-top: 12px;
+   
+    width: 160px;
+    height: auto;
+    min-height: 160px;
+    border: 2px dashed #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+.card-body-variant{
+    padding:0px !important;
+}
+.product-color-item{
+    margin-bottom: 12px;
+    margin-top: 12px;
+}
+.product-variant-item{
+    margin-bottom: 12px;
+    margin-top: 12px;
+}
+.btn-remove-variant{
+    margin-top: 18px;
+}

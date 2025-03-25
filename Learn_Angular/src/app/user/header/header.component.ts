@@ -20,7 +20,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.searchControl.valueChanges.pipe(
-      debounceTime(2000),
+      debounceTime(1000),
       distinctUntilChanged(),
       switchMap(term => {
         if (!term?.trim()) { // Kiểm tra null hoặc rỗng

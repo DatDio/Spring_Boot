@@ -29,30 +29,30 @@ public class ProductController {
 
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiResponse<ProductDto> createProduct( CreateProductRequest request) {
+    @PostMapping(value = "/create")
+    public ApiResponse<ProductDto> createProduct(@RequestBody CreateProductRequest request) {
         return productService.createProduct(request);
     }
 
 
     // Cập nhật Product
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping(value="/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiResponse<ProductDto> updateUser( @ModelAttribute UpdateProductRequest request) {
+    @PostMapping(value="/update")
+    public ApiResponse<ProductDto> updateProduct( @RequestBody UpdateProductRequest request) {
         return productService.updateProduct(request);
     }
 
     // Xóa User
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/delete")
-    public ApiResponse<String> deleteUser(@RequestParam Long id) {
+    public ApiResponse<String> deleteProduct(@RequestParam Long id) {
 
         return productService.deleteProduct(id);
     }
 
 
     @PostMapping("/search")
-    public ApiResponse<PageableObject<ProductDto>> searchUsers(@RequestBody SearchProductRequest request) {
+    public ApiResponse<PageableObject<ProductDto>> searchProduct(@RequestBody SearchProductRequest request) {
 
         return productService.searchProducts(request);
     }

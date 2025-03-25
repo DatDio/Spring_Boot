@@ -1,73 +1,86 @@
 package com.example.learn_spring_boot.config;
 
 import com.example.learn_spring_boot.SystemContants.RoleConstants;
-import com.example.learn_spring_boot.entities.Brand;
-import com.example.learn_spring_boot.entities.Category;
-import com.example.learn_spring_boot.entities.Role;
+import com.example.learn_spring_boot.entities.*;
 import com.example.learn_spring_boot.repositories.brands.BrandRepository;
 import com.example.learn_spring_boot.repositories.category.CategoryRepository;
 import com.example.learn_spring_boot.repositories.roles.RoleRepository;
+import com.example.learn_spring_boot.repositories.users.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Set;
 
 @Configuration
+@RequiredArgsConstructor
 public class DataSeeder {
+
+    private final RoleRepository roleRepository;
+    private final BrandRepository brandRepository;
+    private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
     @Bean
-    CommandLineRunner initDatabase(RoleRepository roleRepository,
-                                   BrandRepository brandRepository,
-                                   CategoryRepository categoryRepository) {
+    CommandLineRunner initDatabase() {
         return args -> {
-            // ✅ Kiểm tra và tạo ROLE nếu chưa có
-            if (roleRepository.findByName(RoleConstants.ADMIN).isEmpty()) {
-                Role adminRole = new Role();
-                adminRole.setName(RoleConstants.ADMIN);
-                roleRepository.save(adminRole);
-            }
+            seedRoles();
+            seedBrands();
+            seedCategories();
+            seedAdminUser();
+        };
+    }
 
-            if (roleRepository.findByName(RoleConstants.USER).isEmpty()) {
-                Role userRole = new Role();
-                userRole.setName(RoleConstants.USER);
-                roleRepository.save(userRole);
-            }
+    private void seedRoles() {
+        if (roleRepository.findByName(RoleConstants.ADMIN).isEmpty()) {
+            roleRepository.save(new Role(RoleConstants.ADMIN));
+        }
+        if (roleRepository.findByName(RoleConstants.USER).isEmpty()) {
+            roleRepository.save(new Role(RoleConstants.USER));
+        }
+        if (roleRepository.findByName(RoleConstants.AFFILIATE).isEmpty()) {
+            roleRepository.save(new Role(RoleConstants.AFFILIATE));
+        }
+    }
 
-            if (roleRepository.findByName(RoleConstants.AFFILIATE).isEmpty()) {
-                Role affiliateRole = new Role();
-                affiliateRole.setName(RoleConstants.AFFILIATE);
-                roleRepository.save(affiliateRole);
+    private void seedBrands() {
+        String[] brands = {"Việt Tiến", "An Phước", "May 10", "Blue Exchange"};
+        for (String brand : brands) {
+            if (brandRepository.findByName(brand).isEmpty()) {
+                brandRepository.save(new Brand(brand));
             }
+        }
+    }
 
-            // ✅ Seed Brands (Thương hiệu quần áo)
+    private void seedCategories() {
+        String[] categories = {"Áo thun", "Áo sơ mi", "Quần jean", "Đầm váy", "Đồ thể thao"};
+        for (String category : categories) {
+            if (categoryRepository.findByName(category).isEmpty()) {
+                categoryRepository.save(new Category(category));
+            }
+        }
+    }
 
-            if (brandRepository.findByName("Việt Tiến").isEmpty()) {
-                brandRepository.save(new Brand("Việt Tiến"));
-            }
-            if (brandRepository.findByName("An Phước").isEmpty()) {
-                brandRepository.save(new Brand("An Phước"));
-            }
-            if (brandRepository.findByName("May 10").isEmpty()) {
-                brandRepository.save(new Brand("May 10"));
-            }
-            if (brandRepository.findByName("Blue Exchange").isEmpty()) {
-                brandRepository.save(new Brand("Blue Exchange"));
-            }
+    private void seedAdminUser() {
+        if (userRepository.findByEmail("admin@dio.com").isEmpty()) {
+            Role adminRole = roleRepository.findByName(RoleConstants.ADMIN).orElseThrow(
+                    () -> new RuntimeException("Role ADMIN chưa được tạo!")
+            );
 
-            // ✅ Seed Categories (Danh mục quần áo)
-            if (categoryRepository.findByName("Áo thun").isEmpty()) {
-                categoryRepository.save(new Category("Áo thun"));
-            }
-            if (categoryRepository.findByName("Áo sơ mi").isEmpty()) {
-                categoryRepository.save(new Category("Áo sơ mi"));
-            }
-            if (categoryRepository.findByName("Quần jean").isEmpty()) {
-                categoryRepository.save(new Category("Quần jean"));
-            }
-            if (categoryRepository.findByName("Đầm váy").isEmpty()) {
-                categoryRepository.save(new Category("Đầm váy"));
-            }
-            if (categoryRepository.findByName("Đồ thể thao").isEmpty()) {
-                categoryRepository.save(new Category("Đồ thể thao"));
-            }
-            };
+            Users admin = Users.builder()
+                    .userName("admin")
+                    .email("admin@dio.com")
+                    .passWord(passwordEncoder.encode("admin123")) // Mật khẩu mã hóa
+                    .roles(Set.of(adminRole)) // Gán quyền ADMIN
+                    .build();
+
+            userRepository.save(admin);
+            System.out.println("✅ Tài khoản Admin đã được tạo: admin@dio.com / admin123");
+        } else {
+            System.out.println("⚠️ Tài khoản Admin đã tồn tại.");
+        }
     }
 }

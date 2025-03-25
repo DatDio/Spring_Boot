@@ -1,6 +1,6 @@
 import { Component, Renderer2, AfterViewInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, RouterModule } from '@angular/router';
 import { FooterComponent } from 'src/app/share/footer/footer.component';
 import { HeaderComponent } from "src/app/user/header/header.component";
 import { HomeComponent } from "src/app/user/home/home.component";
@@ -14,7 +14,7 @@ declare global {
 @Component({
   selector: 'app-user-layout',
   standalone: true,
-  imports: [RouterOutlet, FooterComponent, HeaderComponent],
+  imports: [RouterOutlet, FooterComponent, HeaderComponent,RouterModule],
   templateUrl: './user-layout.component.html',
   styleUrls: ['./user-layout.component.css']
 })

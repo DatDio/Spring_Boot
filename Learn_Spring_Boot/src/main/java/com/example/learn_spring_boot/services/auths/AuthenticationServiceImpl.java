@@ -55,48 +55,36 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
     // ✅ Đăng nhập tài khoản
     @Override
-    public ApiResponse<JwtAuhenticationResponse> singIn(SigninRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
+    public ApiResponse<JwtAuhenticationResponse> signIn(SigninRequest request) {
+        try {
+            // Tìm user theo email hoặc username
+            Users user = userRepository.findByEmail(request.getEmail())
+                    .orElseGet(() -> userRepository.findByUserName(request.getEmail())
+                            .orElseThrow(() -> new RuntimeException("Người dùng không tồn tại")));
 
-        Users user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Người dùng không tồn tại"));
+            // Kiểm tra mật khẩu
+            if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+                return ApiResponse.failure("Mật khẩu không chính xác!");
+            }
 
-        String token = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
-        return new ApiResponse<>(true, "Đăng nhập thành công",
-                JwtAuhenticationResponse.builder()
-                        .refreshToken(refreshToken)
-                        .token(token)
-                        .build());
+            // Xác thực tài khoản với Spring Security
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getUsername(), request.getPassword())
+            );
+
+            // Tạo JWT Token
+            String token = jwtService.generateToken(user);
+            var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
+
+            return new ApiResponse<>(true, "Đăng nhập thành công",
+                    JwtAuhenticationResponse.builder()
+                            .refreshToken(refreshToken)
+                            .token(token)
+                            .build());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ApiResponse.failure("Có lỗi xảy ra!");
+        }
     }
 
-    // ✅ Đặt lại mật khẩu
-    @Override
-    public ApiResponse<String> resetPassword(ResetPassword resetPassword) {
-//        Users user = userRepository.findByEmail(resetPassword.getEmail())
-//                .orElseThrow(() -> new RuntimeException("Không tìm thấy tài khoản với email này"));
-//
-//        user.setPassWord(passwordEncoder.encode(resetPassword.getNewPassword()));
-//        userRepository.save(user);
-
-        return new ApiResponse<>(true, "Đặt lại mật khẩu thành công", "Password updated");
-    }
-
-    // ✅ Đổi mật khẩu
-    @Override
-    public ApiResponse<String> changePassword(ChangePassword changePassword) {
-//        Users user = userRepository.findByEmail(changePassword.getEmail())
-//                .orElseThrow(() -> new RuntimeException("Không tìm thấy tài khoản với email này"));
-//
-//        if (!passwordEncoder.matches(changePassword.getOldPassword(), user.getPassword())) {
-//            return new ApiResponse<>(false, "Mật khẩu cũ không đúng", null);
-//        }
-//
-//        user.setPassword(passwordEncoder.encode(changePassword.getNewPassword()));
-//        userRepository.save(user);
-//
-       return new ApiResponse<>(true, "Đổi mật khẩu thành công", "Password changed");
-    }
 }

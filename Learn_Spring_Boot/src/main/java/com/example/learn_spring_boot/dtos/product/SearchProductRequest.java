@@ -18,7 +18,8 @@ public class SearchProductRequest {
     private long priceTo;
     private String name;
     private String description;
-
+    private Long brandId;
+    private Long categoryId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate createdFrom;
 

@@ -42,7 +42,7 @@ public class SecurityConfiguration {
                         .anyRequest().permitAll() // ✅ Cho phép tất cả API truy cập
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // ✅ Không dùng session
-                .authenticationProvider(authenticationProvider()) // ✅ Xác thực user
+                .authenticationManager(authenticationManager()) // ✅ Xác thực user
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // ✅ Thêm JWT Filter
                 .build();
     }
@@ -60,13 +60,13 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
+//    @Bean
+//    public DaoAuthenticationProvider authenticationProvider() {
+//        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+//        authProvider.setUserDetailsService(userDetailsService);
+//        authProvider.setPasswordEncoder(passwordEncoder());
+//        return authProvider;
+//    }
 
     // ✅ Thêm phương thức `corsConfigurationSource()` để tránh lỗi
     @Bean

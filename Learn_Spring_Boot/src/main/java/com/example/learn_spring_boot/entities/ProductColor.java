@@ -9,11 +9,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "DioProductColors")
+@Table(name = "DioProductColors",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"color", "product_id"}))
 @Getter
 @Setter
 @AllArgsConstructor
@@ -25,13 +27,13 @@ public class ProductColor extends BaseEntity {
     private Products product;
 
     @Column(nullable = false)
-    private BigDecimal price;
+    private double price;
 
     private String color;
     private String imageUrl;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "productColor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<ProductVariant> variants;
+    private Set<ProductVariant> variants = new HashSet<>();
 
 }

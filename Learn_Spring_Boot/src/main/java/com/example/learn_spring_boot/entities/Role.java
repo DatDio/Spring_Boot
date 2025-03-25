@@ -20,7 +20,10 @@ import java.util.Set;
 @NoArgsConstructor
 public class Role extends BaseEntity implements GrantedAuthority {
     private String name;
-
+    // ✅ Constructor nhận name
+    public Role(String name) {
+        this.name = name;
+    }
     @ManyToMany(mappedBy = "roles")
     private Set<Users> users;
 

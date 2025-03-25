@@ -23,31 +23,21 @@ export class ProductService {
 
   // ✅ Sửa createProduct để gửi FormData
   createProduct(product: Product): Observable<Product> {
-    const formData = new FormData();
-    formData.append('name', product.name);
-    formData.append('description', product.description);
-    formData.append('price', product.price);
-    if (product.imageFile) {
-      formData.append('image', product.imageFile);
-    }
+    // const formData = new FormData();
+    // formData.append('name', product.name);
+    // formData.append('description', product.description);
+    // formData.append('price', product.price);
+    // if (product.imageFile) {
+    //   formData.append('image', product.imageFile);
+    // }
 
-    return this.apiService.postTypeRequest<Product>(this.baseUrl + '/create', formData);
+    return this.apiService.postTypeRequest<Product>(this.baseUrl + '/create', product);
   }
 
   // ✅ Cập nhật toàn bộ sản phẩm (PUT)
-  updateProduct(id: number, product: Product): Observable<Product> {
-    const formData = new FormData();
-    if (id !== undefined && id !== null) {
-      formData.append('id', id.toString());  
-    }
-    formData.append('name', product.name);
-    formData.append('description', product.description);
-    formData.append('price', product.price);
-    if (product.imageFile) {
-      formData.append('image', product.imageFile);
-    }
-    
-    return this.apiService.postTypeRequest<Product>(`${this.baseUrl}/update`, formData);
+  updateProduct(product: Product): Observable<Product> {
+   
+    return this.apiService.postTypeRequest<Product>(`${this.baseUrl}/update`, product);
   }
 
   // ✅ Cập nhật một phần sản phẩm (PATCH)
@@ -64,5 +54,15 @@ export class ProductService {
   searchProducts(searchRequest: any): Observable<PaginationResponse<Product>> {
     return this.apiService.postTypeRequest<PaginationResponse<Product>>(`${this.baseUrl}/search`, searchRequest);
   }
+  getMinMaxPrice(product: Product): { minPrice: number; maxPrice: number } {
+    if (!product.productColors.length) {
+      return { minPrice: 0, maxPrice: 0 };
+    }
 
+    const prices = product.productColors.map(color => color.price);
+    const minPrice = Math.min(...prices);
+    const maxPrice = Math.max(...prices);
+
+    return { minPrice, maxPrice };
+  }
 }

@@ -16,7 +16,7 @@ public class FileStorageService {
 
     private static final String UPLOAD_DIR = "src/main/resources/static/uploads/";
 
-    public String saveImage(MultipartFile file) {
+    public String uploadFile(MultipartFile file) {
         try {
             File uploadFolder = new File(UPLOAD_DIR);
             if (!uploadFolder.exists()) {

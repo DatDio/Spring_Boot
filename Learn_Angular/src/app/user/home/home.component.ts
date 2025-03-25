@@ -1,6 +1,9 @@
-import { Component, AfterViewInit, OnDestroy, Renderer2, Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-
+import { Component, AfterViewInit, OnDestroy, Renderer2, Inject, PLATFORM_ID, OnInit } from '@angular/core';
+import { isPlatformBrowser,CommonModule  } from '@angular/common';
+import { ProductService } from 'src/app/core/services/product/product.service';
+import { Product } from '@models/product.model';
+import { RouterModule } from '@angular/router';
+import { environment } from '@environments/environment';
 declare global {
   interface Window {
     tns?: any;
@@ -8,27 +11,78 @@ declare global {
 }
 
 @Component({
+  standalone: true,
   selector: 'app-home',
+  imports:[RouterModule,CommonModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements AfterViewInit, OnDestroy {
+export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
+  imageBaseUrl = environment.imageBaseUrl;
   private heroSlider: any;
   private brandSlider: any;
-
+  isLoading: boolean = true;
+  products: Product[] = [];
+  currentPage: number = 1;
+  pageSize: number = 12;
+  totalPages: number = 1;
+  pagesToShow: number[] = [];
+  totalItems: number = 0;
+  searchParams = {
+    name: '',
+    brandId: null as number | null,
+    categoryId: null as number | null,
+    priceFrom: null as number | null,
+    priceTo: null as number | null,
+    createdFrom: null as string | null,
+    createdTo: null as string | null,
+    sortBy: 'createAt',
+    direction: 'desc'
+  };
   constructor(
     private renderer: Renderer2,
-    @Inject(PLATFORM_ID) private platformId: any
-  ) {}
+    @Inject(PLATFORM_ID) private platformId: any,
+    private productService: ProductService,
+  ) { }
 
   ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {
       this.loadSliderScripts();
     }
   }
-
+  ngOnInit(): void {
+    this.loadProducts();
+  }
   ngOnDestroy() {
-   
+
+  }
+  /** Gọi API lấy danh sách sản phẩm */
+  loadProducts(): void {
+
+
+    const params = {
+      ...this.searchParams,
+      page: this.currentPage,
+      size: this.pageSize
+    };
+
+    this.productService.searchProducts(params).subscribe({
+      next: (data) => {
+        this.products = data.data;
+        this.totalPages = data.totalPages;
+        this.totalItems = data.totalItems;
+        this.isLoading = false;
+        //this.updatePagination();
+      },
+      error: () => {
+        //this.errorMessage = 'Lỗi khi tải danh sách sản phẩm!';
+        this.isLoading = false;
+      }
+    });
+  }
+  getPriceRange(product: Product): string {
+    const { minPrice, maxPrice } = this.productService.getMinMaxPrice(product);
+    return minPrice === maxPrice ? `${minPrice} VND` : `${minPrice} - ${maxPrice} VND`;
   }
 
   private loadSliderScripts() {

@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateProductVariantRequest {
-    private Long productColorId;
+    //private Long productColorId;
     private String productSize;
     private int stockQuantity;
 }

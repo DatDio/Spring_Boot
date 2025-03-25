@@ -14,7 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     provideAnimations(), // ✅ Cần thiết cho ngx-toastr hoạt động
     provideToastr({
-      positionClass: 'toast-top-right', // Hiển thị thông báo ở góc phải dưới
+      positionClass: 'toast-top-full-width', // Hiển thị thông báo ở góc phải dưới
       timeOut: 3000,
       closeButton: true, 
       progressBar:true, // Thời gian hiển thị (3 giây)

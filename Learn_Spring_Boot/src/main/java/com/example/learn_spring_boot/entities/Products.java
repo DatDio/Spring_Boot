@@ -24,7 +24,7 @@ public class Products extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 3000)
     private String description;
 
     private String imageUrl;
@@ -37,7 +37,7 @@ public class Products extends BaseEntity {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval = true)
     @JsonManagedReference
-    private Set<ProductColor> colors;
+    private Set<ProductColor> productColors ;
 }
